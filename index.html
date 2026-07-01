@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>계산기</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"맑은 고딕",sans-serif;
+}
+
+body{
+
+    background:#dff8d8;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:15px;
+}
+
+/* 계산기 */
+
+.calculator{
+
+    width:390px;
+    max-width:100%;
+    background:#f9fff9;
+    border-radius:30px;
+    padding:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    position:relative;
+}
+
+/* 고양이 귀 */
+
+.ear{
+    position:absolute;
+    width:70px;
+    height:70px;
+    background:#f9fff9;
+    top:-25px;
+    transform:rotate(45deg);
+}
+
+.left-ear{
+    left:35px;
+}
+
+.right-ear{
+    right:35px;
+}
+
+.ear:after{
+    content:"";
+    position:absolute;
+    width:35px;
+    height:35px;
+    background:pink;
+    top:18px;
+    left:18px;
+}
+
+/* 제목 */
+
+h1{
+
+    text-align:center;
+    color:#3b6b3b;
+    margin-bottom:15px;
+}
+
+/* 수염 */
+
+.whiskers{
+    display:flex;
+    justify-content:space-between;
+    margin:5px 0 10px;
+}
+
+.whiskers span{
+
+    width:80px;
+    height:2px;
+    background:#777;
+}
+
+/* 화면 */
+
+.display{
+
+    width:100%;
+    height:60px;
+    border:none;
+    border-radius:15px;
+    background:#ecffee;
+    font-size:30px;
+    text-align:right;
+    padding:10px;
+    margin-bottom:15px;
+}
+
+/* 기록 */
+
+.history{
+
+    background:white;
+    border-radius:15px;
+    height:140px;
+    overflow:auto;
+    padding:10px;
+    margin-bottom:15px;
+    font-size:15px;
+}
+
+.history div{
+
+    margin-bottom:5px;
+    color:#555;
+}
+
+/* 버튼 */
+
+.buttons{
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+button{
+
+    height:65px;
+    border:none;
+    border-radius:20px;
+    font-size:22px;
+    cursor:pointer;
+    transition:.2s;
+    background:#ffffff;
+    box-shadow:0 3px 8px rgba(0,0,0,.1);
+}
+
+button:hover{
+
+    transform:scale(.97);
+}
+
+.operator{
+
+    background:#ffe7a8;
+}
+
+.equal{
+
+    background:#98f7a8;
+}
+
+.clear{
+
+    background:#ffb8b8;
+}
+
+/* 고양이 발 */
+
+button::after{
+
+    content:"🐾";
+    display:block;
+    font-size:12px;
+    opacity:.5;
+}
+
+/* 하단 */
+
+.footer{
+
+    text-align:center;
+    margin-top:15px;
+    color:#3b6b3b;
+    font-weight:bold;
+    letter-spacing:8px;
+}
+
+/* 모바일 */
+
+@media(max-width:450px){
+
+.calculator{
+
+    width:100%;
+}
+
+button{
+
+    height:60px;
+    font-size:20px;
+}
+
+.display{
+
+    font-size:26px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="calculator">
+
+<div class="ear left-ear"></div>
+<div class="ear right-ear"></div>
+
+<h1>🐱 계산기 🐱</h1>
+
+<div class="whiskers">
+<span></span>
+<span></span>
+</div>
+
+<input class="display" id="display" readonly>
+
+<div class="history" id="history"></div>
+
+<div class="buttons">
+
+<button class="clear" onclick="clearDisplay()">C</button>
+<button onclick="append('(')">(</button>
+<button onclick="append(')')">)</button>
+<button class="operator" onclick="append('/')">÷</button>
+
+<button onclick="append('7')">7</button>
+<button onclick="append('8')">8</button>
+<button onclick="append('9')">9</button>
+<button class="operator" onclick="append('*')">×</button>
+
+<button onclick="append('4')">4</button>
+<button onclick="append('5')">5</button>
+<button onclick="append('6')">6</button>
+<button class="operator" onclick="append('-')">−</button>
+
+<button onclick="append('1')">1</button>
+<button onclick="append('2')">2</button>
+<button onclick="append('3')">3</button>
+<button class="operator" onclick="append('+')">+</button>
+
+<button onclick="append('0')">0</button>
+<button onclick="append('.')">.</button>
+<button onclick="append('/')">/</button>
+<button class="equal" onclick="calculate()">=</button>
+
+</div>
+
+<div class="footer">
+K J S
+</div>
+
+</div>
+
+<script>
+
+const display=document.getElementById("display");
+const history=document.getElementById("history");
+
+function append(value){
+
+display.value+=value;
+
+}
+
+function clearDisplay(){
+
+display.value="";
+
+}
+
+function calculate(){
+
+if(display.value==="") return;
+
+try{
+
+let expression=display.value;
+
+let result=Function('"use strict";return ('+expression+')')();
+
+let line=document.createElement("div");
+
+line.innerHTML=
+expression+" = <b>"+result+"</b>";
+
+history.appendChild(line);
+
+history.scrollTop=history.scrollHeight;
+
+display.value=result;
+
+}
+
+catch{
+
+alert("잘못된 수식입니다.");
+
+}
+
+}
+
+/* 키보드 입력 */
+
+document.addEventListener("keydown",function(e){
+
+if((e.key>='0'&&e.key<='9')||
+['+','-','*','/','(',')','.'].includes(e.key))
+append(e.key);
+
+if(e.key==="Enter")
+calculate();
+
+if(e.key==="Backspace")
+display.value=display.value.slice(0,-1);
+
+if(e.key==="Escape")
+clearDisplay();
+
+});
+
+</script>
+
+</body>
+</html>
